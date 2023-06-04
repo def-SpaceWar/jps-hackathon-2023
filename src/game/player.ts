@@ -1,8 +1,9 @@
 import playerSpriteSheet from "../assets/player/player";
+import player1SpriteSheet from "../assets/player/player_1";
 import { height, width } from "../main";
 import { AnimatedSprite } from "../render/animated_sprite";
 import { type Enemy } from "./enemy";
-import { normalize, type RectCollider, type Vector2D } from "./util";
+import { normalize, pause, type RectCollider, type Vector2D } from "./util";
 
 type Direction = "left" | "right" | "up" | "down";
 
@@ -19,6 +20,11 @@ export class Player {
 
   isFightingEnemy = false;
   enemyFighting: Enemy | null = null;
+  alpha = 1;
+  stage = 0;
+
+  squaresConverted = 0;
+  respawn: () => void;
 
   constructor(
     x: number,
@@ -38,6 +44,9 @@ export class Player {
       0,
       playerSpriteSheet
     );
+    this.respawn = () => {
+      this.pos = [x, y];
+    };
   }
 
   move(direction: Direction, stop = false) {
@@ -67,6 +76,10 @@ export class Player {
   }
 
   update(dt: number, rectColliders: RectCollider[]) {
+    if (this.stage == 1 && this.sprite.clipWidth != player1SpriteSheet.width) {
+      this.sprite = new AnimatedSprite(...this.pos, ...this.dims, this.rotation, player1SpriteSheet, this.sprite.animation);
+    }
+
     rectColliders.forEach((collider) => {
       const isCollidingX = () => {
         if (
@@ -100,12 +113,12 @@ export class Player {
 
     if (this.movingDirections.indexOf("right") != -1) {
       this.pos[0] += this.speed * dt;
-      this.rotation = 0.15;
+      this.rotation = 0.3;
       if (this.lookingDown) this.rotation *= -1;
     }
     if (this.movingDirections.indexOf("left") != -1) {
       this.pos[0] -= this.speed * dt;
-      this.rotation = -0.15;
+      this.rotation = -0.3;
       if (this.lookingDown) this.rotation *= -1;
     }
     if (this.movingDirections.indexOf("right") == -1) {
@@ -139,12 +152,35 @@ export class Player {
     }
 
     if (!this.isCentered) [this.sprite.x, this.sprite.y] = this.pos;
+    if (this.isCentered) [this.sprite.x, this.sprite.y] = [width/2, height/2];
     [this.sprite.w, this.sprite.h] = this.dims;
     this.sprite.rotation = this.rotation + (this.lookingDown ? Math.PI : 0);
     this.sprite.update();
   }
 
   draw(ctx: CanvasRenderingContext2D) {
+    ctx.globalAlpha = this.alpha;
     this.sprite.draw(ctx);
+    ctx.globalAlpha = 1;
+  }
+
+  async die() {
+    const self = this;
+    const oldSpeed = this.speed;
+    this.speed = 0;
+
+    for (let i = 0; i < 20; i++) {
+      self.alpha -= 0.05;
+      await pause(0.05);
+    }
+
+    this.respawn();
+
+    for (let j = 0; j < 20; j++) {
+      self.alpha += 0.05;
+      await pause(0.05);
+    }
+
+    self.speed = oldSpeed;
   }
 }

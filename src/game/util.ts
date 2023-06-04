@@ -109,3 +109,11 @@ export const textBlob = async(ctx: CanvasRenderingContext2D, lines: string[]) =>
     document.addEventListener("keypress", spaceHit)
   });
 };
+
+export const pause = (t: number): Promise<null> => {
+  return new Promise((res) => {
+    setTimeout(() => {
+      res(null);
+    }, t * 1000);
+  });
+};

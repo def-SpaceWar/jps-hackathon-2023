@@ -5,7 +5,7 @@ const enemy2SpriteSheet: SpriteSheetData = {
     width: 29,
     height: 29,
     colCount: 3,
-    total: 12,
+    total: 11,
     url
 };
 

@@ -1,7 +1,7 @@
 import { SpriteSheetData } from '../../image_types';
-import url from './sprite_sheet_triangleate.png';
+import url from './sprite_sheet_triangelate.png';
 
-const enemy2SpriteSheet: SpriteSheetData = {
+const enemy2TriangleateSpriteSheet: SpriteSheetData = {
     width: 29,
     height: 29,
     colCount: 3,
@@ -9,4 +9,4 @@ const enemy2SpriteSheet: SpriteSheetData = {
     url
 };
 
-export default enemy2SpriteSheet;
+export default enemy2TriangleateSpriteSheet;

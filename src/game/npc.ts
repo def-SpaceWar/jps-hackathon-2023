@@ -17,6 +17,8 @@ export class Npc {
   blinkSpeed = 10;
   bgRect: Rectangle;
 
+  range = 250;
+
   constructor(
     public x: number,
     public y: number,
@@ -91,6 +93,15 @@ export class Npc {
   }
 
   draw(ctx: CanvasRenderingContext2D) {
+    if (this.dialog.length > 0) {
+      ctx.save();
+      ctx.fillStyle = '#00FFAE44'
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.range, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
     this.sprite.draw(ctx);
 
     if (this.dialog.length > 0) {
@@ -119,7 +130,7 @@ export class Npc {
       switch (e.key) {
         case "E":
         case "e":
-          if ((player.pos[0] - this.x) ** 2 + (player.pos[1] - this.y) > 62_500)
+          if ((player.pos[0] - this.x) ** 2 + (player.pos[1] - this.y) > this.range**2)
             return;
           player.speed = 0;
           if (!this.genDialogue()) {

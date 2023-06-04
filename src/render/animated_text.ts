@@ -59,4 +59,12 @@ export default class AnimatedText {
       self.stringIdx++;
     };
   }
+
+  setText(text: string) {
+    this.shownText = '';
+    this.text = text;
+    this.stringIdx = 0;
+    this.isDone = false;
+    this.isUpdatingStartedYet = false;
+  }
 }
