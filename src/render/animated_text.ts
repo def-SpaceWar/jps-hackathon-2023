@@ -38,12 +38,14 @@ export default class AnimatedText {
       this.isUpdatingStartedYet = true;
     }
 
+    ctx.save();
     ctx.font = `${this.fontSize}px Comic Sans MS`;
     ctx.fillStyle = this.color;
     ctx.fillText(this.shownText, this.x, this.y + this.fontSize, this.w);
-    ctx.strokeStyle = this.strokeColor;
-    ctx.lineWidth = this.strokeWidth;
-    ctx.strokeText(this.shownText, this.x, this.y + this.fontSize, this.w);
+    //ctx.strokeStyle = this.strokeColor;
+    //ctx.lineWidth = this.strokeWidth;
+    //ctx.strokeText(this.shownText, this.x, this.y + this.fontSize, this.w);
+    ctx.restore();
   }
 
   update(self: AnimatedText) {

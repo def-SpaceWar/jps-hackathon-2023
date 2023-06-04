@@ -6,7 +6,8 @@ export enum RenderState {
 export const renderLoop = (callback: (dt: number) => RenderState): Promise<null> => {
   return new Promise((resolve) => {
     const transformedCallback = (before: number) => (now: number) => {
-      const dt = (now - before) / 1000;
+      let dt = (now - before) / 1000;
+      if (dt > 0.5) dt = 0.5;
       const result = callback(dt);
 
       switch (result) {

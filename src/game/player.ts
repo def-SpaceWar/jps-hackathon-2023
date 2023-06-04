@@ -1,6 +1,7 @@
 import playerSpriteSheet from "../assets/player/player";
 import { height, width } from "../main";
 import { AnimatedSprite } from "../render/animated_sprite";
+import { type Enemy } from "./enemy";
 import { normalize, type RectCollider, type Vector2D } from "./util";
 
 type Direction = "left" | "right" | "up" | "down";
@@ -13,8 +14,11 @@ export class Player {
 
   blinking = false;
   blinkTimer = 0;
-  speed = 1000;
+  speed = 300;
   lookingDown = false;
+
+  isFightingEnemy = false;
+  enemyFighting: Enemy | null = null;
 
   constructor(
     x: number,
@@ -64,7 +68,6 @@ export class Player {
 
   update(dt: number, rectColliders: RectCollider[]) {
     rectColliders.forEach((collider) => {
-      return;
       const isCollidingX = () => {
         if (
           this.pos[0] - this.dims[0] / 2 < collider.x + collider.w / 2 &&
