@@ -21,7 +21,9 @@ type QweInfo = [a: number, b: number, c: number];
 // a < b < c
 const pythagTriples: [a: number, b: number, c: number][] = [
   [3, 4, 5],
+  [4, 3, 5],
   [6, 8, 10],
+  [8, 6, 10],
   [9, 12, 15],
   [5, 12, 13],
   [8, 15, 17],
@@ -48,6 +50,7 @@ export class Enemy {
   playerWin = false;
   listener: Listener<"keydown"> | undefined;
   shots = 0;
+  shotsFired = 0;
   trianglesSolved = 0;
   spawnSpeed = 1;
 
@@ -154,7 +157,7 @@ export class Enemy {
       [player.sprite.x, player.sprite.y] = [0, height / 2];
       [this.sprite.x, this.sprite.y] = [width, height / 2];
       this.firstTime = false;
-      if (this.enemyType == 2) this.spawnSpeed = 2;
+      if (this.enemyType == 2) this.spawnSpeed = 2.5;
     }
 
     player.sprite.rotation = 0;
@@ -199,7 +202,8 @@ export class Enemy {
             if (e.key == this.direction && this.shots > 0) {
               this.direction = undefined;
               this.shots -= 1;
-              this.spawnSpeed *= 1.5;
+              this.spawnSpeed *= 2.5;
+              this.shotsFired++;
             } else if (e.key != this.direction) this.playerLose = true;
             break;
           case "0":
@@ -250,12 +254,17 @@ export class Enemy {
       }
     }
 
-    if (this.trianglesSolved > 5) {
-      this.playerWin = true;
+    switch (this.enemyType) {
+      case 1:
+        if (this.shotsFired >= 5) this.playerWin = true;
+        break;
+      case 2:
+        if (this.shotsFired >= 8) this.playerWin = true;
+        break;
     }
 
     let speed = 100;
-    if (this.enemyType == 2) speed *= 1.5;
+    if (this.enemyType == 2) speed *= 2.5;
     switch (this.direction) {
       case "q":
         this.sprite.x += speed * dt;
@@ -331,6 +340,7 @@ export class Enemy {
       this.spawnSpeed = 1;
       this.fightAudio?.pause();
       this.fightAudio = undefined;
+      this.shotsFired = 0;
     }
 
     if (this.playerWin) {
@@ -348,6 +358,7 @@ export class Enemy {
       this.spawnSpeed = 1;
       this.fightAudio?.pause();
       this.fightAudio = undefined;
+      this.shotsFired = 0;
     }
   }
 

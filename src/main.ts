@@ -194,7 +194,7 @@ async function triangle1() {
     75,
     [
     ],
-    2
+    1
   );
   const travellerListener = traveller.listen(player);
 
